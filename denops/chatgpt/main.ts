@@ -49,8 +49,10 @@ export async function main(denops: Denops): Promise<void> {
         })
       }).then(res => res.json())
 
-      console.log(data.choices[0].message.content)
-
+      denops.cmd("vnew")
+      await denops.call("setline", 1, `Q. ${message}`)
+      await denops.call("setline", 2, `A. ${data.choices.map(v => v.message.content).join('')}`);
+      
       return true;
     },
   };
