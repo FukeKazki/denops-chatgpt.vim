@@ -49,9 +49,17 @@ export async function main(denops: Denops): Promise<void> {
         })
       }).then(res => res.json())
 
-      denops.cmd("vnew")
-      await denops.call("setline", 1, `Q. ${message}`)
-      await denops.call("setline", 2, `A. ${data.choices.map(v => v.message.content).join('')}`);
+      const buf = await denops.call('nvim_create_buf', false, true)
+      await denops.call('nvim_buf_set_lines', buf, 0, -1, true, [`Q. ${message}`, ...data.choices.map(v => v.message.content)])
+      denops.call("nvim_open_win", buf, true, {
+        'style': 'minimal', 
+        'relative': 'editor',
+        'width': 30,
+        'height': 30,
+        'row': 1, 
+        'col': 1,
+      })
+
       
       return true;
     },
